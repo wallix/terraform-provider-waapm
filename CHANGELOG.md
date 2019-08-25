@@ -5,4 +5,4 @@
 ## 1.0.0 (Aug 25, 2019)
 
 FEATURES:
-Compatible with terrform 0.11.x and waapm 3.2.x
+Compatible with terraform 0.11.x and waapm 3.2.x
