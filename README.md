@@ -21,11 +21,11 @@ The complete list for datasource arguement is the following:
 * bastion (string): bastion url to to query
 * format (string): requested secret format
 * key (string): type of requested secret
-* modules (string) :use modules for fingerprint
+* modules (string): use modules for fingerprint
 * forced_modules (list of strings): forced modules for fingerprint
 * checkin (bool): check account in
 * generations (int): number of generations to use for fingerprint
-* directory (string:) directory for cred and vault files
+* directory (string): directory for cred and vault files
 * application (string): name of the application
 
-Only account is mandatory. The secret s return as value.
+Only account is mandatory. The secret is return as value.
