@@ -1,8 +1,8 @@
 package main
 
 import (
+	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
 	"github.com/wallix/terraform-provider-waapm/waapm"
-        "github.com/hashicorp/terraform/plugin"
 )
 
 func main() {
