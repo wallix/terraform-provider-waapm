@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// Provider implementation for waapm
+// Provider implementation for waapm.
 func Provider() *schema.Provider {
 	return &schema.Provider{
 		DataSourcesMap: map[string]*schema.Resource{
@@ -28,75 +28,74 @@ func Provider() *schema.Provider {
 }
 
 func providerConfig(d *schema.ResourceData) (interface{}, error) {
-
 	waapmPath := d.Get("waapm_path").(string)
 	if waapmPath == "" {
 		return nil, errors.New("waapm_path not defined")
 	}
+
 	return waapmPath, nil
 }
 
 func dataSourceSecret() *schema.Resource {
 	return &schema.Resource{
-
 		Read: dataSourceSecretRead,
 
 		Schema: map[string]*schema.Schema{
-			"account": &schema.Schema{
+			"account": {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "account of the secret using target syntax",
 			},
-			"bastion": &schema.Schema{
+			"bastion": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "bastion to query",
 			},
-			"format": &schema.Schema{
+			"format": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "requested secret format",
 			},
-			"key": &schema.Schema{
+			"key": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "type of requested secret",
 			},
-			"modules": &schema.Schema{
+			"modules": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "use modules for fingerprint",
 			},
-			"forced_modules": &schema.Schema{
+			"forced_modules": {
 				Type:        schema.TypeList,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Optional:    true,
 				Description: "forced modules for fingerprint",
 			},
-			"checkin": &schema.Schema{
+			"checkin": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     true,
 				Description: "check account in",
 			},
-			"generations": &schema.Schema{
+			"generations": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Default:     2,
 				Description: "number of generations to use for fingerprint",
 			},
-			"directory": &schema.Schema{
+			"directory": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "directory for cred and vault files",
 			},
-			"application": &schema.Schema{
+			"application": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Default:     "terraform",
 				Description: "name of the application",
 			},
-			"value": &schema.Schema{
+			"value": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "value of the secret",
@@ -107,10 +106,9 @@ func dataSourceSecret() *schema.Resource {
 }
 
 func dataSourceSecretRead(d *schema.ResourceData, m interface{}) error {
-
 	waapmPath, ok := m.(string)
 	if !ok {
-		return fmt.Errorf("cannot read waapm_path")
+		return errors.New("cannot read waapm_path")
 	}
 
 	args := []string{"checkout"}
@@ -122,7 +120,7 @@ func dataSourceSecretRead(d *schema.ResourceData, m interface{}) error {
 	if ok {
 		bastion, ok = value.(string)
 		if !ok {
-			return fmt.Errorf("cannot read bastion")
+			return errors.New("cannot read bastion")
 		}
 		args = append(args, "-b", bastion)
 
@@ -133,7 +131,7 @@ func dataSourceSecretRead(d *schema.ResourceData, m interface{}) error {
 	if ok {
 		format, ok = value.(string)
 		if !ok {
-			return fmt.Errorf("cannot read format")
+			return errors.New("cannot read format")
 		}
 		args = append(args, "-f", format)
 	}
@@ -143,7 +141,7 @@ func dataSourceSecretRead(d *schema.ResourceData, m interface{}) error {
 	if ok {
 		key, ok = value.(string)
 		if !ok {
-			return fmt.Errorf("cannot read key")
+			return errors.New("cannot read key")
 		}
 		args = append(args, "-k", key)
 	}
@@ -153,7 +151,7 @@ func dataSourceSecretRead(d *schema.ResourceData, m interface{}) error {
 	if ok {
 		modules, ok = value.(string)
 		if !ok {
-			return fmt.Errorf("cannot read modules")
+			return errors.New("cannot read modules")
 		}
 		args = append(args, "-m", modules)
 	}
@@ -163,7 +161,7 @@ func dataSourceSecretRead(d *schema.ResourceData, m interface{}) error {
 	if ok {
 		v, ok := value.([]interface{})
 		if !ok {
-			return fmt.Errorf("cannot read forced modules")
+			return errors.New("cannot read forced modules")
 		}
 		forcedModules = make([]string, len(v))
 		for i, m := range v {
@@ -180,9 +178,9 @@ func dataSourceSecretRead(d *schema.ResourceData, m interface{}) error {
 	if ok {
 		checkin, ok = value.(bool)
 		if !ok {
-			return fmt.Errorf("cannot read checkin")
+			return errors.New("cannot read checkin")
 		}
-		if checkin == false {
+		if !checkin {
 			args = append(args, "-n")
 		}
 	}
@@ -203,14 +201,14 @@ func dataSourceSecretRead(d *schema.ResourceData, m interface{}) error {
 	if ok {
 		application, ok = value.(string)
 		if !ok {
-			return fmt.Errorf("cannot read application")
+			return errors.New("cannot read application")
 		}
 		args = append(args, "-a", application)
 	}
 
 	value, ok = d.GetOk("account")
 	if !ok {
-		return fmt.Errorf("account is not set")
+		return errors.New("account is not set")
 	}
 	accountName := value.(string)
 	args = append(args, accountName)
@@ -220,6 +218,7 @@ func dataSourceSecretRead(d *schema.ResourceData, m interface{}) error {
 	credential, err := exec.Command(waapmPath, args...).CombinedOutput()
 	if err != nil {
 		fmt.Println(string(credential))
+
 		return fmt.Errorf("%s", credential)
 	}
 
