@@ -123,7 +123,6 @@ func dataSourceSecretRead(d *schema.ResourceData, m interface{}) error {
 			return errors.New("cannot read bastion")
 		}
 		args = append(args, "-b", bastion)
-
 	}
 
 	var format string
@@ -217,7 +216,7 @@ func dataSourceSecretRead(d *schema.ResourceData, m interface{}) error {
 
 	credential, err := exec.Command(waapmPath, args...).CombinedOutput()
 	if err != nil {
-		fmt.Println(string(credential))
+		fmt.Println(string(credential)) //nolint
 
 		return fmt.Errorf("%s", credential)
 	}
