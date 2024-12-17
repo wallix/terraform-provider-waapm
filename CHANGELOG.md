@@ -1,6 +1,12 @@
+## 2.0.3
+
+Updated dependancies
+
+## 2.0.2
+
+Update terraform provider files
+
 ## 1.1.0 (Unreleased)
-
-
 
 ## 1.0.0 (Aug 25, 2019)
 
