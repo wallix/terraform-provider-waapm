@@ -34,7 +34,6 @@ jobs:
         uses: crazy-max/ghaction-import-gpg@v6.2.0
         id: import_gpg
         with:
-          # These secrets will need to be configured for the repository:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
       -

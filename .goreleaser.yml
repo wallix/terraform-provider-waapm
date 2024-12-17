@@ -31,12 +31,12 @@ checksum:
 signs:
   - artifacts: checksum
     args:
-      - "--batch"
-      - "--local-user"
+      - --batch
+      - --local-user
       - "{{ .Env.GPG_FINGERPRINT }}"
-      - "--output"
+      - --output
       - "${signature}"
-      - "--detach-sign"
+      - --detach-sign
       - "${artifact}"
 release:
   draft: true
